@@ -1,0 +1,22 @@
+{
+    "name": "artifacts",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "deploy": "wrangler deploy",
+        "dev": "wrangler dev",
+        "start": "wrangler dev",
+        "test": "vitest",
+        "cf-typegen": "wrangler types",
+        "check": "biome check",
+        "check:fix": "biome check --fix"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^1.9.4",
+        "typescript": "^5.9.3",
+        "wrangler": "^4.54.0"
+    },
+    "dependencies": {
+        "hono": "^4.10.8"
+    }
+}

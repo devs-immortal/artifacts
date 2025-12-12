@@ -1,0 +1,19 @@
+{
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "artifacts",
+    "main": "src/index.ts",
+    "compatibility_date": "2025-12-12",
+    "observability": {
+        "enabled": true
+    },
+    "assets": {
+        "directory": "./public/",
+        "binding": "ASSETS"
+    },
+    "routes": [
+        {
+            "pattern": "artifacts.immortaldevs.net",
+            "custom_domain": true
+        }
+    ]
+}

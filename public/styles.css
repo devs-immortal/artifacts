@@ -1,0 +1,119 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #222222;
+    font-family: 'Lato', sans-serif;
+}
+
+header {
+    background-color: #111111;
+    color: white;
+    padding: 0px 20px;
+
+    div {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        max-width: 1200px;
+        margin: 0 auto;
+        gap: 10px;
+    }
+
+    h1 {
+        font-size: 1.5em;
+        margin: 0.55em 0;
+    }
+
+    i {
+        margin-right: 16px;
+    }
+}
+
+main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+
+    #breadcrumb-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    #back-button {
+        background-color: transparent;
+        border: none;
+        border-radius: 4px;
+        color: #fafafa;
+        cursor: pointer;
+        font-size: 1.2em;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #back-button:disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
+
+    #breadcrumbs {
+        color: #fafafa;
+        font-size: 0.9em;
+        margin: 0;
+    }
+
+    #files {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        .file {
+            align-items: center;
+            background-color: #333333;
+            border-radius: 5px;
+            color: #fafafa;
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 24px;
+            text-decoration: none;
+
+            i {
+                margin-right: 16px;
+            }
+
+            svg {
+                vertical-align: middle;
+                height: 1.2em;
+            }
+
+            .file-name {
+                display: inline-flex;
+                align-items: center;
+            }
+
+            .file-meta {
+                color: #bbbbbb;
+                font-size: 0.85em;
+                white-space: nowrap;
+
+                @media (max-width: 600px) {
+                    display: none;
+                }
+            }
+
+            &:hover {
+                background-color: #333333;
+            }
+        }
+
+        .file.empty-state {
+            justify-content: flex-start;
+            color: #bbbbbb;
+            font-style: italic;
+        }
+    }
+}
