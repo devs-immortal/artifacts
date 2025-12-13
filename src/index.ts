@@ -72,7 +72,9 @@ const fetchArtifactsList = async (repo: string, env: Env) => {
 
     return artifacts.map((artifact) => ({
         name: artifact.workflow_run?.head_sha ?? artifact.id.toString(),
+        sha: artifact.digest ?? null,
         url: `/artifact/${repo}/${artifact.id}`,
+        expired: artifact.expired,
         created: artifact.created_at,
     }));
 };

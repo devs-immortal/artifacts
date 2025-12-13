@@ -110,6 +110,11 @@ main {
             }
         }
 
+        .expired {
+            color: #bbbbbb;
+            cursor: default;
+        }
+
         .file.empty-state {
             justify-content: flex-start;
             color: #bbbbbb;

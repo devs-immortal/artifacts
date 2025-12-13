@@ -97,9 +97,14 @@ const renderDirectory = (pathSegments) => {
                 navigateTo(nextPath);
             });
         } else {
-            link.href = entry.url;
-            link.download = entry.name;
-            name.innerHTML = `<i class="ph ph-file"></i> ${entry.name}`;
+            if (entry.expired) {
+                link.classList.add('expired');
+                name.innerHTML = `<i class="ph ph-file-dashed"></i> ${entry.name}`;
+            } else {
+                link.href = entry.url;
+                link.download = entry.name;
+                name.innerHTML = `<i class="ph ph-file"></i> ${entry.name}`;
+            }
         }
 
         link.appendChild(name);
@@ -136,6 +141,7 @@ loadDir(mods)
                 name: name,
                 children: items.map((item) => ({
                     name: `artifact-${item.name.slice(0, 7)}.zip`,
+                    expired: item.expired,
                     url: item.url,
                     created: item.created,
                 })),
