@@ -1,4 +1,41 @@
 import { Hono } from 'hono';
+import {
+    array,
+    boolean,
+    nullish,
+    number,
+    object,
+    safeParse,
+    string,
+} from 'valibot';
+
+const artifactSchema = object({
+    id: number(),
+    node_id: string(),
+    name: string(),
+    size_in_bytes: number(),
+    url: string(),
+    archive_download_url: string(),
+    expired: boolean(),
+    digest: nullish(string()),
+    created_at: nullish(string()),
+    updated_at: nullish(string()),
+    expires_at: nullish(string()),
+    workflow_run: nullish(
+        object({
+            id: number(),
+            repository_id: number(),
+            head_repository_id: number(),
+            head_branch: string(),
+            head_sha: string(),
+        }),
+    ),
+});
+
+const artifactsListSchema = object({
+    total_count: number(),
+    artifacts: array(artifactSchema),
+});
 
 const fetchGithub = async (url: string, env: Env) => {
     const response = await fetch(url, {
@@ -26,9 +63,15 @@ const fetchArtifactsList = async (repo: string, env: Env) => {
     if (!response.ok) {
         return [];
     }
-    const data = await response.json();
-    return data.artifacts.map((artifact: Record<string, unknown>) => ({
-        name: artifact.workflow_run?.head_sha || artifact.name,
+    const data = safeParse(artifactsListSchema, await response.json());
+    if (!data.success) {
+        throw new Error('Invalid artifacts list data structure');
+    }
+
+    const { artifacts } = data.output;
+
+    return artifacts.map((artifact) => ({
+        name: artifact.workflow_run?.head_sha ?? artifact.id.toString(),
         url: `/artifact/${repo}/${artifact.id}`,
         created: artifact.created_at,
     }));
