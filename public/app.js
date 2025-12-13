@@ -5,7 +5,7 @@ const backButton = document.getElementById('back-button');
 const mods = ['bind-cmd', 'chest-colorizer', 'paradise-lost', 'test-mod'];
 const root = {
     name: '',
-    children: [],
+    children: mods.map((mod) => ({ name: mod, children: [], loading: true })),
 };
 
 let currentPath = [];
@@ -40,7 +40,9 @@ const resolveDirectory = (pathSegments) => {
         const next = (node.children || []).find(
             (child) => child.children && child.name === segment,
         );
-        if (!next) return { node: root, path: [] };
+        if (!next) {
+            return { node: { children: [] }, path: pathSegments };
+        }
         resolved.push(segment);
         node = next;
     }
@@ -90,10 +92,14 @@ const processArtifactsList = (data) => {
             }
         }
 
-        root.children.push({
-            name: name,
-            children: [...Array.from(branchMap.values()), ...rootArtifacts],
-        });
+        const modNode = root.children.find((child) => child.name === name);
+        if (modNode) {
+            modNode.children = [
+                ...Array.from(branchMap.values()),
+                ...rootArtifacts,
+            ];
+            modNode.loading = false;
+        }
     }
 
     const initialPath = resolveDirectory(getPathFromLocation()).path;
@@ -134,15 +140,19 @@ const renderDirectory = (pathSegments) => {
 
         if (entry.children) {
             const nextPath = [...path, entry.name];
-            link.href = `/${nextPath.join('/')}/`;
             name.innerHTML = `<i class="ph-fill ph-folder-simple"></i> ${entry.name}`;
-            link.addEventListener('click', (event) => {
-                event.preventDefault();
-                navigateTo(nextPath);
-            });
+            if (entry.loading) {
+                link.classList.add('disabled');
+            } else {
+                link.href = `/${nextPath.join('/')}/`;
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    navigateTo(nextPath);
+                });
+            }
         } else {
             if (entry.expired) {
-                link.classList.add('expired');
+                link.classList.add('disabled');
                 name.innerHTML = `<i class="ph ph-file-dashed"></i> ${entry.name}`;
             } else {
                 link.href = entry.url;
@@ -177,6 +187,8 @@ window.addEventListener('popstate', (event) => {
         event.state?.path ?? resolveDirectory(getPathFromLocation()).path;
     renderDirectory(path);
 });
+
+renderDirectory(getPathFromLocation() ?? []);
 
 loadDir(mods)
     .then(processArtifactsList)

@@ -110,7 +110,7 @@ main {
             }
         }
 
-        .expired {
+        .disabled {
             color: #bbbbbb;
             cursor: default;
         }
