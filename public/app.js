@@ -56,6 +56,50 @@ const formatTimestamp = (entry) => {
     return date.toISOString().replace('T', ' ').split('.')[0];
 };
 
+const sanitizeBranchName = (branch) => {
+    if (!branch) return null;
+    return branch.replace(/\//g, '_');
+};
+
+const buildArtifactEntry = (item) => ({
+    name: `artifact-${item.name.slice(0, 7)}.zip`,
+    expired: item.expired,
+    url: item.url,
+    created: item.created,
+    modified: item.updated_at,
+});
+
+const processArtifactsList = (data) => {
+    for (const { name, items } of data) {
+        const branchMap = new Map();
+        const rootArtifacts = [];
+
+        for (const item of items) {
+            const branchName = sanitizeBranchName(item.branch);
+            const artifactEntry = buildArtifactEntry(item);
+            if (branchName) {
+                if (!branchMap.has(branchName)) {
+                    branchMap.set(branchName, {
+                        name: branchName,
+                        children: [],
+                    });
+                }
+                branchMap.get(branchName).children.push(artifactEntry);
+            } else {
+                rootArtifacts.push(artifactEntry);
+            }
+        }
+
+        root.children.push({
+            name: name,
+            children: [...Array.from(branchMap.values()), ...rootArtifacts],
+        });
+    }
+
+    const initialPath = resolveDirectory(getPathFromLocation()).path;
+    navigateTo(initialPath, { replace: true });
+};
+
 const updateBackButton = (path) => {
     if (!backButton) return;
     backButton.disabled = path.length === 0;
@@ -135,22 +179,7 @@ window.addEventListener('popstate', (event) => {
 });
 
 loadDir(mods)
-    .then((data) => {
-        for (const { name, items } of data) {
-            root.children.push({
-                name: name,
-                children: items.map((item) => ({
-                    name: `artifact-${item.name.slice(0, 7)}.zip`,
-                    expired: item.expired,
-                    url: item.url,
-                    created: item.created,
-                })),
-            });
-        }
-
-        const initialPath = resolveDirectory(getPathFromLocation()).path;
-        navigateTo(initialPath, { replace: true });
-    })
+    .then(processArtifactsList)
     .catch((error) => {
         console.error('Error loading directory:', error);
     });

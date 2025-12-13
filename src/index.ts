@@ -74,6 +74,7 @@ const fetchArtifactsList = async (repo: string, env: Env) => {
         name: artifact.workflow_run?.head_sha ?? artifact.id.toString(),
         sha: artifact.digest ?? null,
         url: `/artifact/${repo}/${artifact.id}`,
+        branch: artifact.workflow_run?.head_branch ?? null,
         expired: artifact.expired,
         created: artifact.created_at,
     }));
