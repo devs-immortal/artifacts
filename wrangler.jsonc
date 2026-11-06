@@ -1,6 +1,7 @@
 {
     "$schema": "node_modules/wrangler/config-schema.json",
     "name": "artifacts",
+    "account_id": "6a41506a1dec145e24a98e69936d2117",
     "main": "src/index.ts",
     "compatibility_date": "2025-12-12",
     "observability": {
