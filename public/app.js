@@ -71,6 +71,14 @@ const buildArtifactEntry = (item) => ({
     modified: item.updated_at,
 });
 
+const markLatest = (entries) => {
+    const latest = entries.reduce(
+        (a, b) => (new Date(b.created) > new Date(a.created) ? b : a),
+        entries[0],
+    );
+    if (latest) latest.latest = true;
+};
+
 const processArtifactsList = (data) => {
     for (const { name, items } of data) {
         const branchMap = new Map();
@@ -91,6 +99,9 @@ const processArtifactsList = (data) => {
                 rootArtifacts.push(artifactEntry);
             }
         }
+
+        for (const branch of branchMap.values()) markLatest(branch.children);
+        markLatest(rootArtifacts);
 
         const modNode = root.children.find((child) => child.name === name);
         if (modNode) {
@@ -151,6 +162,7 @@ const renderDirectory = (pathSegments) => {
                 });
             }
         } else {
+            if (entry.latest) link.classList.add('latest');
             if (entry.expired) {
                 link.classList.add('disabled');
                 name.innerHTML = `<i class="ph ph-file-dashed"></i> ${entry.name}`;

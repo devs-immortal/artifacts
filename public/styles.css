@@ -110,6 +110,10 @@ main {
             }
         }
 
+        .latest {
+            outline: 2px solid #facc15;
+        }
+
         .disabled {
             color: #bbbbbb;
             cursor: default;
