@@ -10,6 +10,9 @@
         "directory": "./public/",
         "binding": "ASSETS"
     },
+    "secrets": {
+        "required": ["GITHUB_PAT"]
+    },
     "routes": [
         {
             "pattern": "artifacts.immortaldevs.net",

@@ -106,7 +106,7 @@ app.get('/artifacts/:repo', async (c) => {
     return c.json(artifacts);
 });
 
-app.get('/favicon.ico', (c) => {
+app.get('/favicon.ico', () => {
     return Response.redirect('https://immortaldevs.net/favicon.ico', 301);
 });
 

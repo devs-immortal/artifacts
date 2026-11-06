@@ -12,12 +12,12 @@
         "check:fix": "biome check --fix"
     },
     "devDependencies": {
-        "@biomejs/biome": "^1.9.4",
-        "typescript": "^5.9.3",
-        "wrangler": "^4.54.0"
+        "@biomejs/biome": "^2.6.5",
+        "typescript": "^7.0.2",
+        "wrangler": "^4.158.0"
     },
     "dependencies": {
-        "hono": "^4.10.8",
-        "valibot": "^1.2.0"
+        "hono": "^4.13.16",
+        "valibot": "^1.5.0"
     }
 }
